@@ -120,3 +120,28 @@ def knn_model(X_train, y_train, X_validate, y_validate, n):
     print('Accuracy of KNN on validate set: {:.2f}'
      .format(knn.score(X_validate, y_validate)))
 
+def test_forest(X_train, y_train, X_test, y_test, depth, samples):
+    '''This function takes in six arguments: training dataframe of features, training dataframe for the target, validation
+        dataframe of features, validation dataframe for target, the depth of the tree as an integer, and the minimum number 
+        of samples per leaf as an integer. The function fits and trains a random forest model and makes predictions for 
+        testing. The function returns a classification report of the model's performance on the training set and test
+        set, as well as the depth and sample leaf size. It also prints the model's accuracy score on train and test.'''
+    # Make the model
+    forest = RandomForestClassifier(max_depth=depth, min_samples_leaf=samples, random_state=217)
+    # Fit the model on train only
+    forest.fit(X_train, y_train)
+    # Use the model
+    # We'll evaluate the model's performance on train, first
+    y_pred = forest.predict(X_train)
+    # get probabilities for the model and save to a variable
+    y_pred_proba = forest.predict_proba(X_train)
+    # evaluate the model's performance on the test set
+    y_pred_test = forest.predict(X_test)
+    # print the accuracy of the model on train
+    print('Accuracy of Random Forest classifier on training set: {:.2f}'.format(forest.score(X_train, y_train)))
+    # print the classification report for the model's performance on train
+    print(classification_report(y_train, y_pred))
+    # print the accuracy of the model on validate to check for overfitting
+    print('Accuracy of Random Forest classifier on test set:     {:.2f}'.format(forest.score(X_test, y_test)))
+    print(classification_report(y_test, y_pred_test))
+
