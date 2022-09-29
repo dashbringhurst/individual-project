@@ -18,37 +18,68 @@ def split_data(df, column):
     return train, validate, test
 
 def plot_day_night(train):
-    '''This function'''
+    '''This function takes in a dataframe and returns a figure of four subplots. Each subplot shows the relationship
+        between the severity of an accident and whether the accident occurred during the day or night. Each feature
+        represents a different angle of the sun from the horizon.'''
+    # set the figure size for the entire visualization
     plt.figure(figsize=[20,6])
+    # subplot 1 of 4
     plt.subplot(1,4,1)
+    # show the number of accidents for each level of severity for both day and night
     sns.countplot(x=train.severity, hue=train.sunrise_sunset)
+    # subplot 2 of 4
     plt.subplot(1,4,2)
+    # show the number of accidents for each level of severity for both day and night
     sns.countplot(x=train.severity, hue=train.civil_twilight)
+    # subplot 3 of 4
     plt.subplot(1,4,3)
+    # show the number of accidents for each level of severity for both day and night
     sns.countplot(x=train.severity, hue=train.nautical_twilight)
+    # subplot 4 of 4
     plt.subplot(1,4,4)
+    # show the number of accidents for each level of severity for both day and night
     sns.countplot(x=train.severity, hue=train.astronomical_twilight)
 
 def barplot_data(train):
+    '''This function takes in a dataframe and returns a visualization of 8 subplots. Each subplot shows the relationship
+        between the severity of an accident and a continuous feature recorded at the time of the accident.'''
+    # set the figure size for the visualization
     plt.figure(figsize=[20,9])
+    # subplot 1 of 8
     plt.subplot(2,4,1)
+    # show the relationship between accident severity and the affected distance
     sns.barplot(x='severity', y='distance', data=train)
+    # subplot 2 of 8
     plt.subplot(2,4,2)
+    # show the relationship between accident severity and the recorded temperature in Fahrenheit
     sns.barplot(x='severity', y='temperature', data=train)
+    # subplot 3 of 8
     plt.subplot(2,4,3)
+    # show the relationship between accident severity and the recorded wind chill
     sns.barplot(x='severity', y='wind_chill', data=train)
+    # subplot 4 of 8
     plt.subplot(2,4,4)
+     # show the relationship between accident severity and the level of humidity
     sns.barplot(x='severity', y='humidity', data=train)
+    # subplot 5 of 8
     plt.subplot(2,4,5)
+     # show the relationship between accident severity and the atmospheric pressure
     sns.barplot(x='severity', y='pressure', data=train)
+    # subplot 6 of 8
     plt.subplot(2,4,6)
+     # show the relationship between accident severity and the visibility in miles
     sns.barplot(x='severity', y='visibility', data=train)
+    # subplot 7 of 8
     plt.subplot(2,4,7)
+     # show the relationship between accident severity and the amount of precipitation
     sns.barplot(x='severity', y='precipitation', data=train)
+    # subplot 8 of 8
     plt.subplot(2,4,8)
+     # show the relationship between accident severity and the recorded wind speed
     sns.barplot(x='severity', y='wind_speed', data=train)
 
 def countplot_data(train):
+    
     plt.figure(figsize=[20,16])
     plt.subplot(4,3,1)
     sns.countplot(x=train.severity, hue=train.traffic_calming)
