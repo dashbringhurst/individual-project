@@ -1,4 +1,4 @@
-# Codeup Individual Project
+# Codeup Individual Project: Predicting Vehicular Accident Severity
 
 ## US Accidents from 2016 to 2021
 
@@ -74,7 +74,10 @@ Predicting accident severity based on environmental conditions and road features
 45. civil_twilight: Shows the period of day (i.e. day or night) based on civil twilight. (int64)
 46. nautical_twilight: Shows the period of day (i.e. day or night) based on nautical twilight. (int64)
 47. astronomical_twilight: Shows the period of day (i.e. day or night) based on astronomical twilight. (int64)
-
+48. year: engineered feature from start_time indicating the year of the accident (int64)
+49. month: engineered feature from start_time indicating what month the accident occurred (int64)
+50. day: engineered feature from start_time indicating what day of the month the accident occurred (int64)
+51. hour: engineered feature from start_time indicating what hour of the day the accident occurred (int64)
 
 ## Project Planning
 
@@ -106,17 +109,22 @@ Predicting accident severity based on environmental conditions and road features
 
     - import pandas as pd
     - import numpy as np
-    - import acquire
-    - import prepare
     - import matplotlib.pyplot as plt
     - import seaborn as sns
     - from scipy import stats
+    - import explore
+    - import wrangle
+    - import model
+    - from sklearn.model_selection import train_test_split
     - from sklearn.tree import DecisionTreeClassifier, plot_tree
     - from sklearn.metrics import classification_report
-    - from sklearn.metrics import confusion_matrix
-    - from sklearn.ensemble import RandomForestClassifier
-    - from sklearn.neighbors import KNeighborsClassifier
     - from sklearn.linear_model import LogisticRegression
+    - from sklearn.ensemble import RandomForestClassifier
+    - from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+    - from sklearn.neighbors import KNeighborsClassifier
+    - from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, QuantileTransformer
+    - import warnings
+    - warnings.filterwarnings("ignore")
 
 - Prepare and split the dataset. The code for these steps can be found in the wrangle.py file within this repository.
 
@@ -143,12 +151,16 @@ Predicting accident severity based on environmental conditions and road features
 
 ## Key Findings and Takeaways
 
-- The target variable caused the dataset to be unbalanced, as most accidents were classified as severity level 2. This resulted in a baseline accuracy using the mode to be 93 percent. In order to balance the dataset, I took a random sample of 65,000 level-2 severity accidents from the total dataset using random_seed=217 for reproducibility. I concatenated this sample with the total observations from the other severity classes into a new dataframe of 215,240 observations. This sampling did not take into account any features, so important data about key features of a crash may have been lost.
+- The target variable caused the dataset to be unbalanced, as most accidents were classified as severity level 2. This resulted in a baseline accuracy using the mode to be 93 percent. In order to balance the dataset, I took a random sample of 65,000 level-2 severity accidents from the total dataset using random_seed=217 for reproducibility. I concatenated this sample with the total observations from the other severity classes into a new dataframe of 215,240 observations. This sampling did not take into account any features, so important data about key features of a crash may have been lost. Exploration of this data revealed that crashes of severity level 1 were limited to a nine-month time period in 2020; I dropped this severity level because it is in itself an outlier.
 
 - The minimum viable product model is a decision tree classifier with a maximum depth of 4. I selected three features for the initial model: distance, precipitation, and visibility. I selected these features based on visualizations and statistical tests. I used a random_seed of 217 for reproducibility. The baseline prediction for the training set was .302. The model performed above baseline accuracy at .42 on train and .41 on validate, indicating that the decision tree was not overfit. 
 
-- Subsequent models with other features added increased accuracy by another 10 percent on average. Decision Tree, Random Forest, K Nearest Neighbors, and Logistic Regression were used. 
+- Subsequent models with other features added increased accuracy by another 30 percent on average. Decision Tree, Random Forest, K Nearest Neighbors, and Logistic Regression were used. I scaled the features for train and validate prior to using the KNN model, but I did not scale the test set because this model was not selected for testing. I evaluated multiple depths and sample sizes for each model. The selected parameters provided the highest performance without overfitting. 
 
-- When indexing for start_time, I discovered that severity level 1 was limited to 2020 only; this is likely because of Covid-19 restrictions reducing overall traffic during this time period. I will drop this severity level and remodel with the three remaining levels. Additional visualization indicates that more accidents occur in April through June, and between the hours of 2pm and 6pm. Perhaps using start time as a feature will improve the models' performance. The number of accidents has increased year over year, but this may be due to improved data collection and digitized accident information over the years. 
+- When resampling the start_time, additional visualization indicated that more accidents occur in April through June, and between the hours of 2pm and 6pm. Using month and hour as features will likely improve the models' performance. The number of accidents has increased year over year, but this may be due to improved data collection and digitized accident information over the years. 
 
-- 
+- The Random Forest Model performed best overall, and when evaluated on the test set, achieved the same overall level of accuracy as train and validate, indicating that the model was not overfit. I used 23 features, 20 from the dataset and 3 engineered features using the start time. 
+
+- I recommend using this model if real-time information of the selected features is available when a crash occurs. The model assumes that severity has been established based on specific parameters and that previous crash data was correctly classified. I also recommend adding posted speed limits to the dataset and whether the area has a special classification, e.g. construction zone, school zone, etc. Information about injuries and fatalities for previous crashes could provide valuable insight on what emergency services will be needed based on the predicted severity of the crash.
+
+- If I had more time, I would explore the coordinate data to see if there are certain areas that experience recurring crashes. I would also like to know more about traffic patterns in the area of the crash to see if traffic density has a significant impact on crash severity. 
