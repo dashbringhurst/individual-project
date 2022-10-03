@@ -25,6 +25,11 @@ Questions regarding time:
 
 Predicting accident severity based on environmental conditions and road features can be useful for first responders, drivers, and rideshare companies. Accurate predictions can help first responders gauge the amount of services and emergency aid needed based on the most commonly required responses for each level of severity. Drivers can get accurate updates on how long traffic will be delayed and if alternate routes are needed. Future utility includes providing warnings to drivers and first responders of potential accident locations and severity based on current environmental and road conditions.
 
+## Executive Summary
+
+- The dataset was downsampled using random sampling due to an imbalance in the target variable. I split the downsampled data into train, validate, and test using a 60/20/20 split stratefied on severity. The total number of observations after removing nulls and outliers and downsampling was 191,685.
+- The selected model is a random forest classifier with a depth of 16 and minimum sample leaf size of 35. I selected 23 features for the final model based on visualizations and statistical tests. I used a random_seed of 217 for reproducibility. The baseline prediction for the training set was .34. The model performed above baseline accuracy at .71 on train and .69 on validate, indicating that the decision tree was not overfit. The model scored .69 on the test set as well. The model was 34 percent more accurate than baseline on the validate and test sets.
+
 ## Data Dictionary
 
 1. id: This is a unique identifier of the accident record. (string)
